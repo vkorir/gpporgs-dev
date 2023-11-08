@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "gpporgs-dev": {
+      "hosting": {
+        "GPPOrgs": [
+          "gpporgs-dev"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "gpporgs-dev"
+  }
+}
