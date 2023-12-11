@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Auth, GoogleAuthProvider, ParsedToken, Unsubscribe, UserCredential, onAuthStateChanged, signInWithPopup, signOut, user } from '@angular/fire/auth';
+import { Auth, GoogleAuthProvider, ParsedToken, Unsubscribe, UserCredential, onAuthStateChanged, signOut, user } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Role, User } from '../models/user';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { signInWithRedirect } from 'firebase/auth';
+import { BehaviorSubject } from 'rxjs';
+import { Role, User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -44,16 +44,17 @@ export class AuthService implements OnDestroy {
   private async setUserData(auth: UserCredential) {
     if (!(auth.user.email || '').endsWith('@berkeley.edu')) {
       this.snackBar.open('Invalid email address', '', { duration: 2000 });
-      this.logout();
+      await this.logout();
       return;
     }
 
     const now = Date.now();
     const _user: User = {
-      uid: auth.user.uid,
+      id: auth.user.uid,
       role: Role.NONE,
       email: auth.user.email || '',
-      name: auth.user.displayName || '',
+      firstName: auth.user.displayName?.split(' ')[0] || '',
+      lastName: auth.user.displayName?.split(' ')[1] || '',
       createdAt: now,
       lastLoginAt: now,
       loginCount: 1,
@@ -67,12 +68,12 @@ export class AuthService implements OnDestroy {
       this.snackBar.open("You're signed up! Pending approval", '', {
         duration: 3000,
       });
-      this.logout();
+      await this.logout();
       return;
     } else if (snapshot.data()['role'] === Role.NONE) {
       // User not approved yet
       this.snackBar.open('Pending admin approval', '', { duration: 2000 });
-      this.logout();
+      await this.logout();
       return;
     }
 
@@ -83,7 +84,7 @@ export class AuthService implements OnDestroy {
     await updateDoc(docRef, _user as any);
   }
 
-  logout() {
-    signOut(this.auth);
+  async logout() {
+    await signOut(this.auth);
   }
 }

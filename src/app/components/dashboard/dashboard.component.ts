@@ -10,4 +10,8 @@ export class DashboardComponent {
   constructor() {
 
   }
+
+  loadCountries() {
+    
+  }
 }
