@@ -4,8 +4,16 @@ import {
   onDocumentCreated,
   onDocumentUpdated,
 } from "firebase-functions/v2/firestore";
+import { HttpsError, beforeUserCreated } from "firebase-functions/v2/identity";
 
 initializeApp();
+
+// Restric registration to berkeley domain
+exports.restrictDomain = beforeUserCreated((event) => {
+  if (!event.data.email?.includes("@berkeley.edu")) {
+    throw new HttpsError("permission-denied", "User your berkeley email");
+  }
+});
 
 // Set initial user claim
 exports.setClaim = onDocumentCreated("users/{userId}", async (event) => {
