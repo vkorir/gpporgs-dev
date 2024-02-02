@@ -31,13 +31,11 @@ export class AuthService implements OnDestroy {
     this.unsubscribe();
   }
 
-  // isAdmin(): Observable<boolean> {
-  //   // return this.claims$.subscribe(claims => claims)
-  // }
-
   login() {
     signInWithRedirect(this.auth, new GoogleAuthProvider())
-      .then((_auth) => this.setUserData(_auth))
+      .then((_auth) => {
+        this.setUserData(_auth)
+      })
       .catch((error) => console.log(error));
   }
 

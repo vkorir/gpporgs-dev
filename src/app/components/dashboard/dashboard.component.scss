@@ -1,0 +1,47 @@
+.table-container {
+    height: calc(100vh - 150px);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    // margin-left: -12px;
+    // margin-right: -12px;
+    border-bottom: none;
+    overflow: auto;
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+
+        td {
+            font-size: 0.86rem !important;
+        }
+
+        th:nth-child(odd),
+        td:nth-child(odd) {
+            width: 22% !important;
+        }
+
+        th:nth-child(even),
+        td:nth-child(even) {
+            width: 26% !important;
+        }
+
+        .mat-header-row {
+            position: sticky;
+        }
+    }
+
+    .spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100% - 100px);
+    }
+
+    .mat-paginator {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        margin-left: -12px;
+        margin-right: -12px;
+        box-shadow: none;
+    }
+}
