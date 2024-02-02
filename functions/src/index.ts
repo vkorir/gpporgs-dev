@@ -8,15 +8,15 @@ import { HttpsError, beforeUserCreated } from "firebase-functions/v2/identity";
 
 initializeApp();
 
-// Restric registration to berkeley domain
-exports.restrictDomain = beforeUserCreated((event) => {
+// Restrict registration to berkeley domain
+exports.restrictdomain = beforeUserCreated((event) => {
   if (!event.data.email?.includes("@berkeley.edu")) {
     throw new HttpsError("permission-denied", "User your berkeley email");
   }
 });
 
 // Set initial user claim
-exports.setClaim = onDocumentCreated("users/{userId}", async (event) => {
+exports.setclaim = onDocumentCreated("users/{userId}", async (event) => {
   try {
     const snapshot = event.data;
     if (snapshot) {
@@ -31,7 +31,7 @@ exports.setClaim = onDocumentCreated("users/{userId}", async (event) => {
 });
 
 // Update user claim after document update
-exports.updateClaim = onDocumentUpdated("users/{userId}", async (event) => {
+exports.updateclaim = onDocumentUpdated("users/{userId}", async (event) => {
   try {
     const previous = event.data?.before.data();
     const current = event.data?.after.data();

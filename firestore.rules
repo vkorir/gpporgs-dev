@@ -14,7 +14,7 @@ service cloud.firestore {
 
     match /{document=**} {
 
-      allow read: if isKnownUser();
+      allow read: if isAuthenticated();
 
       allow write: if isAuthenticated();
     }
