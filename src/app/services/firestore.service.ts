@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, collectionData, doc, docData } from '@angular/fire/firestore';
-import { DocumentReference, orderBy, query, updateDoc } from 'firebase/firestore';
+import { DocumentReference, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { Address } from '../models/address';
 
@@ -10,6 +10,7 @@ import { Address } from '../models/address';
 export class FirestoreService {
   private firestore = inject(Firestore);
   private readonly organizations = 'organizations';
+  private readonly addresses = 'addresses';
 
   readonly affiliations = new Map<string, string>();
   readonly countries = new Map<string, string>();
@@ -46,14 +47,20 @@ export class FirestoreService {
     });
   }
 
-  getOrganizations(): Observable<any[]> {
+  getOrganizations(_approved: boolean): Observable<any[]> {
     const order = orderBy('name', 'asc');
+    const approved = where('approved', '==', _approved);
     const orgCollection = collection(this.firestore, this.organizations);
-    return collectionData(query(orgCollection, order));
+    return collectionData(query(orgCollection, approved, order));
+  }
+
+  updateOrganization(id: string, partial: any) {
+    const docRef = doc(this.firestore, `${this.organizations}/${id}`);
+    updateDoc(docRef, partial);
   }
 
   getAddress(id: string): Observable<Address | undefined> {
-    const docRef = doc(this.firestore, `addresses/${id}`);
+    const docRef = doc(this.firestore, `${this.addresses}/${id}`);
     return docData(docRef as DocumentReference<Address>);
   }
 }

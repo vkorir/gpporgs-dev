@@ -1,9 +1,13 @@
+.filter-container {
+    .material-icons {
+        vertical-align: middle;
+    }
+}
+
 .table-container {
     height: calc(100vh - 150px);
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    // margin-left: -12px;
-    // margin-right: -12px;
+    margin-left: -12px;
+    margin-right: -12px;
     border-bottom: none;
     overflow: auto;
 
@@ -27,6 +31,16 @@
 
         .mat-header-row {
             position: sticky;
+        }
+
+        .mat-mdc-row .mat-mdc-cell {
+            // border-bottom: 1px solid grey;
+            // border-top: 1px solid grey;
+            cursor: pointer;
+        }
+
+        .mat-mdc-row:hover .mat-mdc-cell {
+            border-color: currentColor;
         }
     }
 

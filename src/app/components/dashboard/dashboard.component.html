@@ -1,5 +1,18 @@
+<div class="filter-container">
+  <mat-form-field>
+    <mat-icon matTextPrefix>search</mat-icon>
+    <input matInput placeholder="Search organization" autocomplete="off" (keyup)="filterByName($event)">
+  </mat-form-field>
+  <button mat-button [matMenuTriggerFor]="filters">Select filter</button>
+  <mat-menu #filters="matMenu">
+    <mat-label>Area</mat-label><br/>
+    @for (area of areas; track area) {
+      <mat-checkbox>area</mat-checkbox><br/>
+    }
+  </mat-menu>
+</div>
 <div class="table-container">
-  <table mat-table [dataSource]="dataSource">
+  <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Name</b></th>
       <td mat-cell *matCellDef="let organization">{{ organization.name }}</td>
@@ -18,28 +31,13 @@
     </ng-container>
     <ng-container matColumnDef="sectors">
       <th mat-header-cell *matHeaderCellDef>Sectors</th>
-      <td
-        mat-cell
-        *matCellDef="let organization"
-        [innerText]="formatSectors(organization.sectors)"
-      ></td>
+      <td mat-cell *matCellDef="let organization" [innerText]="formatSectors(organization.sectors)"></td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayCols; sticky: true"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayCols"
-      (click)="(null)"
-    ></tr>
+    <tr mat-row *matRowDef="let row; columns: displayCols" (click)="(null)"></tr>
   </table>
   <div *ngIf="isLoading" class="spinner">
-    <mat-progress-spinner
-      color="primary"
-      mode="indeterminate"
-    ></mat-progress-spinner>
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
   </div>
 </div>
-<mat-paginator
-  [pageSizeOptions]="[10, 25, 50]"
-  [pageSize]="25"
-  showFirstLastButtons
-></mat-paginator>
+<mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="25" showFirstLastButtons></mat-paginator>
