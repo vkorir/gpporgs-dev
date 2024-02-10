@@ -1,19 +1,22 @@
 .container {
     display: flex;
-    // justify-content: center;
     align-items: center;
     height: 70vh;
 
-    .content {
-        // padding: 20px;
-        // width: 60vw;
-        // height: 60vh;
-        border-radius: 15px;
-        // background-color: gray;
-        // box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    .spinner-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        button {
-            padding: 8px 30px;
-        }
+    .button-container {
+        display: inline-block;
+        position: relative;
     }
 }

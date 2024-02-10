@@ -2,6 +2,11 @@
     <div class="content">
         <h1>Hello!</h1>
         <p>Welcome to the new GPP Website! You need to be signed in to continue.</p>
-        <button type="button" class="btn btn-secondary" (click)="loginWithGoogle()" clickable>Login</button>
+        <div class="button-container">
+            <button mat-raised-button [disabled]="isLoading" (click)="login()" color="primary">Login</button>
+            <div class="spinner-container" *ngIf="isLoading">
+                <mat-spinner diameter="24"></mat-spinner>
+            </div>
+        </div>
     </div>
 </div>

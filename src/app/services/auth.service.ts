@@ -2,7 +2,6 @@ import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Auth, GoogleAuthProvider, ParsedToken, Unsubscribe, UserCredential, onAuthStateChanged, signOut, user } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { signInWithRedirect } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 import { Role, User } from '../models/user';
@@ -12,7 +11,6 @@ import { Role, User } from '../models/user';
 })
 export class AuthService implements OnDestroy {
   private auth = inject(Auth);
-  private router = inject(Router);
   private firestore = inject(Firestore);
   private snackBar = inject(MatSnackBar);
   user$ = user(this.auth);
@@ -22,8 +20,10 @@ export class AuthService implements OnDestroy {
 
   constructor() {
     this.unsubscribe = onAuthStateChanged(this.auth, async (_user) => {
-      this.router.navigateByUrl(_user ? 'dashboard' : '');
-      this.claims$.next((await _user?.getIdTokenResult())?.claims);
+      _user?.getIdTokenResult(true).then(res => {
+        this.claims$.next(res.claims);
+        // console.log('role: ', res.claims['role']);
+      });
     });
   }
 
@@ -31,12 +31,10 @@ export class AuthService implements OnDestroy {
     this.unsubscribe();
   }
 
-  login() {
-    signInWithRedirect(this.auth, new GoogleAuthProvider())
-      .then((_auth) => {
-        this.setUserData(_auth)
-      })
-      .catch((error) => console.log(error));
+  loginWithGoogle() {
+    signInWithRedirect(this.auth, new GoogleAuthProvider()).then((_auth) => {
+      this.setUserData(_auth);
+    }).catch(error => console.log('error'));
   }
 
   private async setUserData(auth: UserCredential) {

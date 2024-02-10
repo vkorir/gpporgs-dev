@@ -1,13 +1,46 @@
 .filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .filter-button {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0;
+    }
+
     .material-icons {
         vertical-align: middle;
     }
+
+    .mat-mdc-menu-trigger {
+        background-color: rgb(238, 235, 235);
+    }
+
+    .mat-ripple-element {
+        display: none !important;
+    }
+}
+
+.menu-filters {
+    padding: 20px;
+}
+
+.sectors-container {
+    height: 40vh;
+    overflow-y: scroll;
+}
+
+mat-slider {
+    width: 90%;
+}
+
+.mdc-slider__value-indicator-container {
+    bottom: 0px;
 }
 
 .table-container {
-    height: calc(100vh - 150px);
-    margin-left: -12px;
-    margin-right: -12px;
+    height: calc(100vh - 240px);
     border-bottom: none;
     overflow: auto;
 
@@ -29,18 +62,13 @@
             width: 26% !important;
         }
 
-        .mat-header-row {
-            position: sticky;
-        }
-
         .mat-mdc-row .mat-mdc-cell {
-            // border-bottom: 1px solid grey;
-            // border-top: 1px solid grey;
             cursor: pointer;
         }
 
         .mat-mdc-row:hover .mat-mdc-cell {
-            border-color: currentColor;
+            font-weight: 500;
+            transition: font-weight 0.1s ease-in;
         }
     }
 

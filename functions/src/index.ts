@@ -1,12 +1,13 @@
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 import {
-  onDocumentCreated,
-  onDocumentUpdated,
-} from "firebase-functions/v2/firestore";
-import { HttpsError, beforeUserCreated } from "firebase-functions/v2/identity";
+  HttpsError,
+  beforeUserCreated,
+  beforeUserSignedIn,
+} from "firebase-functions/v2/identity";
 
-initializeApp();
+const app = initializeApp();
 
 // Restrict registration to berkeley domain
 exports.restrictdomain = beforeUserCreated((event) => {
@@ -15,32 +16,14 @@ exports.restrictdomain = beforeUserCreated((event) => {
   }
 });
 
-// Set initial user claim
-exports.setclaim = onDocumentCreated("users/{userId}", async (event) => {
-  try {
-    const snapshot = event.data;
-    if (snapshot) {
-      const data = snapshot.data();
-      const claims = {role: data?.role};
-      await getAuth().setCustomUserClaims(data?.uid, claims);
-      console.log("created claim for: ", data.uid, claims);
-    }
-  } catch (e) {
-    console.log("Error setting user claims: ", e);
-  }
-});
-
-// Update user claim after document update
-exports.updateclaim = onDocumentUpdated("users/{userId}", async (event) => {
-  try {
-    const previous = event.data?.before.data();
-    const current = event.data?.after.data();
-    if (previous?.role !== current?.role) {
-      const claims = {role: current?.role};
-      await getAuth().setCustomUserClaims(current?.uid, claims);
-      console.log("updated claim for: ", current?.uid, claims);
-    }
-  } catch (e) {
-    console.log("Error updating user claims: ", e);
-  }
+exports.onSignIn = beforeUserSignedIn(async (event) => {
+  const firestore = getFirestore(app);
+  const usersCol = firestore.collection("users");
+  const query = usersCol.where("email", "==", event.data.email);
+  const snapshot = await query.get();
+  snapshot.forEach(async (_user) => {
+    const data = _user.data();
+    const claims = { role: data.role };
+    await getAuth().setCustomUserClaims(event.data?.uid, claims);
+  });
 });
