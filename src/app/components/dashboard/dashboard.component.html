@@ -1,4 +1,4 @@
-<div *ngIf="isSetupComplete" class="filter-container row">
+<div *ngIf="fireService.dataLoaded$ | async" class="filter-container row">
   <mat-form-field class="col-5">
     <mat-icon matTextPrefix>search</mat-icon>
     <input matInput [formControl]="nameControl" placeholder="Search organization" autocomplete="off">
@@ -7,7 +7,7 @@
     </button>
   </mat-form-field>
   <div class="filter-button col-3">
-    <button mat-flat-button [matMenuTriggerFor]="filters">
+    <button mat-flat-button [matMenuTriggerFor]="filters" [disabled]="isDataLoading">
       Select filters
       <mat-icon>filter_list</mat-icon>
     </button>
@@ -24,16 +24,15 @@
         <br/>
         <mat-checkbox [checked]="isAllSectorsChecked" [indeterminate]="someSectorsChecked()" (change)="setAllSectors($event.checked)">All</mat-checkbox>
         <section [formGroup]="sectorControls" class="sectors-container">
-          <ng-container *ngFor="let sector of sectors">
+          @for (sector of sectors; track sector) {
             <mat-checkbox formControlName="{{sector.key}}">{{sector.value}}</mat-checkbox>
             <br/>
-          </ng-container>
+          } @empty {
+            <p>no records.</p>
+          }
         </section>
       </div>
     </mat-menu>
-  </div>
-  <div class="actions">
-
   </div>
 </div>
 <div class="table-container mat-elevation-z8">

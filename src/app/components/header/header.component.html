@@ -1,4 +1,4 @@
 <div>
     <h1>GPP Organizations</h1>
-    <button *ngIf="(authService.user$ | async)" type="button" class="btn btn-light" (click)="logout()">Logout</button>
+    <button mat-raised-button *ngIf="user$ | async" (click)="logout()">Logout</button>
 </div>

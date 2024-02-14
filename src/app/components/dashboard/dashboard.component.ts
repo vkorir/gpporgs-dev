@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnDestroy,
-  ViewChild,
-  inject
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,7 +15,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   readonly fireService = inject(FirestoreService);
@@ -33,7 +28,6 @@ export class DashboardComponent implements OnDestroy {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
 
   areas = [Area.DOMESTIC, Area.INTERNATIONAL];
-  price = { min: 0, max: 10000 };
   sectors = <any>[];
 
   nameControl: FormControl;
@@ -43,19 +37,18 @@ export class DashboardComponent implements OnDestroy {
 
   private subscriptions: Subscription[] = [];
   isAllSectorsChecked = true;
-  isSetupComplete = false;
-  isDataLoading = true;
+  isDataLoading = false;
 
-  constructor() {
-    // Fetch complementary data
-    this.fireService.fetchData().subscribe(_ => {
+  ngOnInit(): void {
+    this.initOrganizationsData();
+    const sub = this.fireService.dataLoaded$.subscribe(() => {
       this.initFilterControls();
-      this.initOrganizationsData();
     });
+    this.subscriptions.push(sub);
   }
 
   ngOnDestroy(): void {
-      this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   initFilterControls() {
@@ -73,19 +66,19 @@ export class DashboardComponent implements OnDestroy {
       this.filterValues.sectors.push(key);
     }
     this.sectorControls = this.fb.group(_sectorControls);
-    // complete setup after loading all the data
-    this.isSetupComplete = true;
+    this.registerSubscriptions();
   }
 
   initOrganizationsData() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    this.isDataLoading = true;
     this.dataSource.filterPredicate = this.applyFilter;
-    this.fireService.getOrganizations(true).subscribe((orgs) => {
+    const sub = this.fireService.getOrganizations(true).subscribe((orgs) => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
       this.dataSource.data = orgs;
       this.isDataLoading = false;
     });
-    this.registerSubscriptions();
+    this.subscriptions.push(sub);
   }
 
   updateAllSectorsChecked() {
@@ -109,44 +102,55 @@ export class DashboardComponent implements OnDestroy {
 
   setAllSectors(value: boolean): void {
     const update: any = {};
-    Object.keys(this.sectorControls.controls).map(key => update[key] = value);
+    Object.keys(this.sectorControls.controls).map(
+      (key) => (update[key] = value)
+    );
     this.sectorControls.reset(update);
   }
 
   registerSubscriptions() {
-    this.nameControl.valueChanges.subscribe((name) => {
+    let sub;
+    sub = this.nameControl.valueChanges.subscribe((name) => {
       this.filterValues.name = name.trim().toLowerCase();
       this.dataSource.filter = JSON.stringify(this.filterValues);
     });
-    this.areaControls.valueChanges.subscribe((event) => {
+    this.subscriptions.push(sub);
+
+    sub = this.areaControls.valueChanges.subscribe((event) => {
       const _areas: string[] = [];
-      Object.keys(event).forEach(key => {
+      Object.keys(event).forEach((key) => {
         if (event[key]) _areas.push(key);
       });
       this.filterValues.areas = _areas;
       this.dataSource.filter = JSON.stringify(this.filterValues);
     });
-    this.sectorControls.valueChanges.subscribe((event) => {
+    this.subscriptions.push(sub);
+
+    sub = this.sectorControls.valueChanges.subscribe((event) => {
       const _sectors: string[] = [];
-      Object.keys(event).forEach(key => {
+      Object.keys(event).forEach((key) => {
         if (event[key]) _sectors.push(key);
       });
-      this.filterValues.sectors = _sectors
+      this.filterValues.sectors = _sectors;
       this.dataSource.filter = JSON.stringify(this.filterValues);
       this.updateAllSectorsChecked();
     });
+    this.subscriptions.push(sub);
   }
 
   applyFilter(org: any, filter: string) {
     try {
       const _filter = JSON.parse(filter);
       const _nameMatch = org.name.trim().toLowerCase().includes(_filter.name);
-      const _areaMatch = !org.country ||
+      const _areaMatch =
+        !org.country ||
         (_filter.areas.includes(Area.DOMESTIC) && org.country == 'US') ||
         (_filter.areas.includes(Area.INTERNATIONAL) && org.country != 'US');
       const _sectors = new Set(org.sectors);
-      const _sectorsMatch = org.sectors.length == 0 ||
-        [...new Set(_filter.sectors)].filter((sec) => _sectors.has(sec)).length > 0;
+      const _sectorsMatch =
+        org.sectors.length == 0 ||
+        [...new Set(_filter.sectors)].filter((sec) => _sectors.has(sec))
+          .length > 0;
 
       return _nameMatch && _areaMatch && _sectorsMatch;
     } catch (e) {
@@ -155,12 +159,10 @@ export class DashboardComponent implements OnDestroy {
   }
 
   formatSectors(sectors: string[]): string {
-    return sectors
-      .map((id) => this.fireService.sectors.get(id))
-      .join('\n');
+    return sectors.map((id) => this.fireService.sectors.get(id)).join('\n');
   }
 
   onClickOrganization(id: string) {
-    console.log(id);
+    this.router.navigate(['details', id]);
   }
 }
