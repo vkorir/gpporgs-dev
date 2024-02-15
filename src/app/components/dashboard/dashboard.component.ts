@@ -163,6 +163,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onClickOrganization(id: string) {
-    this.router.navigate(['details', id]);
+    this.router.navigate(['organization', id]);
   }
 }

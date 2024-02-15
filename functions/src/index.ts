@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import { getFirestore, UpdateData } from "firebase-admin/firestore";
+import { getFirestore } from "firebase-admin/firestore";
 import {
   HttpsError,
   beforeUserCreated,
@@ -35,7 +35,6 @@ exports.onSignIn = beforeUserSignedIn(async (event) => {
     const data = _user.data();
     const claims = { role: data.role };
     await getAuth().setCustomUserClaims(event.data?.uid, claims);
-    
   });
 });
 

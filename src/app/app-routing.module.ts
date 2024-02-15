@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { DetailsComponent } from './components/details/details.component';
 import { LoginComponent } from './components/login/login.component';
+import { OrganizationComponent } from './components/organization/organization.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
 
@@ -19,8 +19,8 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizedToLogin),
   },
   {
-    path: 'details/:id',
-    component: DetailsComponent,
+    path: 'organization/:id',
+    component: OrganizationComponent,
     ...canActivate(redirectUnauthorizedToLogin),
   },
   { path: '**', redirectTo: '' },

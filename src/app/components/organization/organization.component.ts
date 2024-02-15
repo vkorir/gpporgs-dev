@@ -1,15 +1,16 @@
+import { Location } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
   selector: 'app-details',
-  templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  templateUrl: './organization.component.html',
+  styleUrl: './organization.component.scss'
 })
-export class DetailsComponent implements OnInit {
-  private router = inject(Router);
+export class OrganizationComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private location = inject(Location);
   readonly fireService = inject(FirestoreService);
 
   ngOnInit(): void {
@@ -17,6 +18,6 @@ export class DetailsComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['dashboard']);
+    this.location.back();
   }
 }
