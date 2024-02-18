@@ -8,6 +8,7 @@ export class Organization {
     phone: string = '';
     website: string = '';
     region: string = '';
+    country: string = '';
     affiliations: Array<string> = [];
     sectors: Array<string> = [];
     otherSector: string = '';

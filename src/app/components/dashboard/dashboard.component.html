@@ -1,14 +1,14 @@
 <div *ngIf="fireService.dataLoaded$ | async" class="flex justify-content-between align-items-center">
   <mat-form-field appearance="fill" class="col-6 p-0">
     <mat-icon matTextPrefix class="vertical-align-middle">search</mat-icon>
-    <input matInput [formControl]="nameControl" [disabled]="isDataLoading" placeholder="Search organization"
+    <input matInput [formControl]="nameControl" placeholder="Search organization"
       autocomplete="off">
     <button *ngIf="nameControl.value" matSuffix mat-icon-button (click)="nameControl.reset('')">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
   <div>
-    <button mat-flat-button [matMenuTriggerFor]="filters" [disabled]="isDataLoading" class="shadow-1">
+    <button mat-flat-button [matMenuTriggerFor]="filters" class="shadow-1">
       Filters
       <mat-icon class="vertical-align-middle">filter_list</mat-icon>
     </button>
@@ -17,7 +17,7 @@
         <strong class="p-2"><mat-label>Area</mat-label></strong>
         <section [formGroup]="areaControls">
           <ng-container *ngFor="let area of areas">
-            <mat-checkbox formControlName="{{area}}" [disableRipple]="true">{{area.toLowerCase()}}</mat-checkbox>
+            <mat-checkbox formControlName="{{area}}">{{area.toLowerCase()}}</mat-checkbox>
           </ng-container>
         </section>
         <br />

@@ -76,7 +76,7 @@ export class FirestoreService implements OnDestroy {
     const order = orderBy('name', 'asc');
     const condition = where('approved', '==', approved);
     const orgCollection = collection(this.firestore, this.organizations);
-    return collectionData(query(orgCollection, condition, order, limit(50)));
+    return collectionData(query(orgCollection, condition, order, limit(1)));
   }
 
   updateOrganization(id: string, partial: any): void {
@@ -91,6 +91,6 @@ export class FirestoreService implements OnDestroy {
 
   getContact(id: string): Observable<any> {
     const docRef = doc(this.firestore, this.contacts, id);
-    return docData(docRef);
+    return docData(docRef, { idField: 'id' });
   }
 }
