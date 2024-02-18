@@ -1,41 +1,43 @@
-<div *ngIf="fireService.dataLoaded$ | async" class="filter-container row">
-  <mat-form-field class="col-5">
-    <mat-icon matTextPrefix>search</mat-icon>
-    <input matInput [formControl]="nameControl" placeholder="Search organization" autocomplete="off">
+<div *ngIf="fireService.dataLoaded$ | async" class="flex justify-content-between align-items-center">
+  <mat-form-field appearance="fill" class="col-6 p-0">
+    <mat-icon matTextPrefix class="vertical-align-middle">search</mat-icon>
+    <input matInput [formControl]="nameControl" [disabled]="isDataLoading" placeholder="Search organization"
+      autocomplete="off">
     <button *ngIf="nameControl.value" matSuffix mat-icon-button (click)="nameControl.reset('')">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-  <div class="filter-button col-3">
-    <button mat-flat-button [matMenuTriggerFor]="filters" [disabled]="isDataLoading">
-      Select filters
-      <mat-icon>filter_list</mat-icon>
+  <div>
+    <button mat-flat-button [matMenuTriggerFor]="filters" [disabled]="isDataLoading" class="shadow-1">
+      Filters
+      <mat-icon class="vertical-align-middle">filter_list</mat-icon>
     </button>
     <mat-menu #filters="matMenu" xPosition="before">
-      <div class="menu-filters" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-        <strong><mat-label>Area</mat-label></strong>
+      <div class="w-full" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+        <strong class="p-2"><mat-label>Area</mat-label></strong>
         <section [formGroup]="areaControls">
           <ng-container *ngFor="let area of areas">
             <mat-checkbox formControlName="{{area}}" [disableRipple]="true">{{area.toLowerCase()}}</mat-checkbox>
           </ng-container>
         </section>
-        <br/>
-        <strong><mat-label>Sectors</mat-label></strong>
-        <br/>
-        <mat-checkbox [checked]="isAllSectorsChecked" [indeterminate]="someSectorsChecked()" (change)="setAllSectors($event.checked)">All</mat-checkbox>
-        <section [formGroup]="sectorControls" class="sectors-container">
+        <br />
+        <strong class="p-2"><mat-label>Sectors</mat-label></strong>
+        <br />
+        <mat-checkbox [checked]="isAllSectorsChecked" [indeterminate]="someSectorsChecked()"
+          (change)="setAllSectors($event.checked)">All</mat-checkbox>
+        <section [formGroup]="sectorControls" class="sectors-container overflow-y-auto h-24rem">
           @for (sector of sectors; track sector) {
-            <mat-checkbox formControlName="{{sector.key}}">{{sector.value}}</mat-checkbox>
-            <br/>
+          <mat-checkbox formControlName="{{sector.key}}">{{sector.value}}</mat-checkbox>
+          <br />
           } @empty {
-            <p>no records.</p>
+          <p>no records.</p>
           }
         </section>
       </div>
     </mat-menu>
   </div>
 </div>
-<div class="table-container mat-elevation-z8">
+<div class="table-container shadow-2 overflow-y-auto">
   <table *ngIf="!isDataLoading" mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Name</b></th>
@@ -60,10 +62,9 @@
     <tr mat-header-row *matHeaderRowDef="displayCols; sticky: true"></tr>
     <tr mat-row *matRowDef="let organizaton; columns: displayCols" (click)="onClickOrganization(organizaton.id)"></tr>
   </table>
-  <div *ngIf="isDataLoading" class="spinner">
-    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+  <div *ngIf="isDataLoading" class="flex flex-column justify-content-between h-full w-full">
+    <p class="flex justify-content-center align-items-center h-full text-lg">Loading data...</p>
+    <mat-progress-bar mode="indeterminate" class=" justify-content-center align-items-end"></mat-progress-bar>
   </div>
 </div>
-<div class="mat-elevation-z8">
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="25" showFirstLastButtons></mat-paginator>
-</div>
+<mat-paginator class="shadow-2" [pageSizeOptions]="[10, 25, 50]" [pageSize]="25" [disabled]="isDataLoading" showFirstLastButtons></mat-paginator>

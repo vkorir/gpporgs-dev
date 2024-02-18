@@ -1,0 +1,15 @@
+mat-card-content {
+    height: calc(100vh - 300px);
+
+    form {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .mat-form-column {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+    }
+}

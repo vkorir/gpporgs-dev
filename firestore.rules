@@ -2,21 +2,8 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    function isAuthenticated() {
-      return request.auth.uid != null;
-    }
-
-    function isKnownUser() {
-      return isAuthenticated() &&
-        exists(/databases/$(database)/documents/users/$(request.auth.uid));
-    }
-
     match /{document=**} {
-
-      allow read: if isAuthenticated();
-
-      allow write: if isAuthenticated();
+      allow read, write: if request.auth.uid != null;
     }
   }
 }

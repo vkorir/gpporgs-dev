@@ -1,4 +1,108 @@
 <button mat-button (click)="goBack()">
     <mat-icon>arrow_back_ios_new</mat-icon> Dashboard
 </button>
-<p>details work!</p>
+<mat-card>
+    <mat-card-header>
+        <mat-card-subtitle>Organization Details</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngIf="!loading.organization && !loading.address">
+        <form [formGroup]="formGroup">
+            <div class="mat-form-column">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" required />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Website</mat-label>
+                    <input matInput formControlName="website" />
+                </mat-form-field>
+            </div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="mat-form-column" formGroupName="address">
+                <mat-form-field>
+                    <mat-label>Street</mat-label>
+                    <input matInput formControlName="street" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>City</mat-label>
+                    <input matInput formControlName="city" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>State</mat-label>
+                    <input matInput formControlName="state" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Zip</mat-label>
+                    <input matInput formControlName="zip" />
+                </mat-form-field>
+            </div>
+            <!-- <mat-grid-list rowHeight="80" cols="2">
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Name</mat-label>
+                        <input matInput formControlName="name" required />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Phone</mat-label>
+                        <input matInput formControlName="phone" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Website</mat-label>
+                        <input matInput formControlName="website" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <ng-container *ngIf="!loading.address">
+                    <mat-grid-tile formGroupName="address">
+                    <mat-form-field>
+                        <mat-label>Street</mat-label>
+                        <input matInput formControlName="street" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile formGroupName="address">
+                    <mat-form-field>
+                        <mat-label>City</mat-label>
+                        <input matInput formControlName="city" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile formGroupName="address">
+                    <mat-form-field>
+                        <mat-label>State</mat-label>
+                        <input matInput formControlName="state" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile formGroupName="address">
+                    <mat-form-field>
+                        <mat-label>Zip</mat-label>
+                        <input matInput formControlName="zip" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                </ng-container>
+            </mat-grid-list> -->
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-flat-button>Edit</button>
+        <button mat-flat-button>Reviews</button>
+    </mat-card-actions>
+    <mat-card-footer>
+        <mat-progress-bar *ngIf="loading.organization" mode="indeterminate"></mat-progress-bar>
+    </mat-card-footer>
+</mat-card>
