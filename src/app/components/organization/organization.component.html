@@ -1,9 +1,9 @@
 <button mat-button class="shadow-1 mb-2" (click)="goBack()">
-<mat-icon>arrow_back_ios_new</mat-icon> Dashboard
+    <mat-icon>arrow_back_ios</mat-icon> Back
 </button>
 <mat-card>
-    <mat-card-header class="mb-4">
-        <mat-card-header>Organization Details</mat-card-header>
+    <mat-card-header>
+        <h3>Organization Details</h3>
     </mat-card-header>
     <mat-card-content *ngIf="!loading.organization && !loading.address">
         <form [formGroup]="formGroup" class="flex justify-content-between">
@@ -11,21 +11,21 @@
                 <div class="mr-1">
                     <mat-form-field class="w-full">
                         <mat-label>Name</mat-label>
-                        <input matInput formControlName="name" required [readonly]="isEditDisabled"/>
+                        <input matInput formControlName="name" required [readonly]="isReadOnly">
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" [readonly]="isEditDisabled" />
+                        <input matInput formControlName="email" [readonly]="isReadOnly">
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>Phone</mat-label>
-                        <input matInput formControlName="phone" [readonly]="isEditDisabled" />
+                        <input matInput formControlName="phone" [readonly]="isReadOnly">
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>Website</mat-label>
-                        <input matInput formControlName="website" [readonly]="isEditDisabled" />
+                        <input matInput formControlName="website" [readonly]="isReadOnly">
                     </mat-form-field>
-                    <mat-form-field *ngIf="isEditDisabled" class="w-full">
+                    <mat-form-field *ngIf="isReadOnly" class="w-full">
                         <mat-label>Region</mat-label>
                         <input matInput value="{{fireService.regions.get(organization.region)}}" readonly required>
                     </mat-form-field>
@@ -33,65 +33,70 @@
                 <div formGroupName="address" class="ml-1">
                     <mat-form-field class="w-full">
                         <mat-label>Street</mat-label>
-                        <input matInput formControlName="street" [readonly]="isEditDisabled" />
+                        <input matInput formControlName="street" [readonly]="isReadOnly">
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>City</mat-label>
-                        <input matInput formControlName="city" [readonly]="isEditDisabled" />
+                        <input matInput formControlName="city" [readonly]="isReadOnly">
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>State</mat-label>
-                        <input matInput formControlName="state" [readonly]="isEditDisabled" />
+                        <input matInput formControlName="state" [readonly]="isReadOnly">
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>Zip</mat-label>
-                        <input matInput formControlName="zip" [readonly]="isEditDisabled" />
+                        <input matInput formControlName="zip" [readonly]="isReadOnly">
                     </mat-form-field>
-                    <mat-form-field *ngIf="isEditDisabled" class="w-full">
+                    <mat-form-field *ngIf="isReadOnly" class="w-full">
                         <mat-label>Country</mat-label>
-                        <input matInput value="{{fireService.countries.get(organization.country)}}" readonly required />
+                        <input matInput value="{{fireService.countries.get(organization.country)}}" readonly required>
                     </mat-form-field>
                 </div>
             </div>
         </form>
         <form *ngIf="!loading.contacts" [formGroup]="contacts">
-            <p>Contacts</p>
-            <div class="overflow-y-auto h-14rem">
+            <h3>Contacts Info</h3>
+            <div class="overflow-y-auto h-16rem">
                 <mat-accordion>
                     @for (id of contactIds; track id; let idx = $index) {
-                        <mat-expansion-panel formGroupName="{{id}}" class="w-full">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>Contact {{idx + 1}}</mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <mat-form-field  class="w-4 mr-2">
-                                <mat-label>Name</mat-label>
-                                <input matInput formControlName="name">
-                            </mat-form-field>
-                            <mat-form-field  class="w-4 mr-2">
-                                <mat-label>Role</mat-label>
-                                <input matInput formControlName="role">
-                            </mat-form-field>
-                            <mat-form-field  class="w-4 mr-2">
-                                <mat-label>Email</mat-label>
-                                <input matInput formControlName="email">
-                            </mat-form-field>
-                            <mat-form-field  class="w-4 mr-2">
-                                <mat-label>Phone</mat-label>
-                                <input matInput formControlName="phone">
-                            </mat-form-field>
-                        </mat-expansion-panel>
+                    <mat-expansion-panel formGroupName="{{id}}" class="w-full">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>Contact {{idx + 1}}</mat-panel-title>
+                            <mat-panel-description>
+                                open to see contact details
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <mat-form-field class="w-4 mr-2">
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="name" [readonly]="isReadOnly">
+                        </mat-form-field>
+                        <mat-form-field class="w-4 mr-2">
+                            <mat-label>Role</mat-label>
+                            <input matInput formControlName="role" [readonly]="isReadOnly">
+                        </mat-form-field>
+                        <mat-form-field class="w-4 mr-2">
+                            <mat-label>Email</mat-label>
+                            <input matInput formControlName="email" [readonly]="isReadOnly">
+                        </mat-form-field>
+                        <mat-form-field class="w-4 mr-2">
+                            <mat-label>Phone</mat-label>
+                            <input matInput formControlName="phone" [readonly]="isReadOnly">
+                        </mat-form-field>
+                    </mat-expansion-panel>
                     } @empty {
-                        <p>No contact.</p>
+                    <p>No contact provided.</p>
                     }
                 </mat-accordion>
             </div>
         </form>
     </mat-card-content>
     <mat-card-actions class="flex justify-content-center">
-        <button mat-flat-button>Edit</button>
-        <button mat-flat-button>Reviews</button>
+        <button mat-flat-button (click)="actionEdit()">Edit</button>
+        <mat-divider vertical class="h-1rem"></mat-divider>
+        <button mat-flat-button (click)="actionReviews()">Check Reviews <mat-icon
+                matSuffix>arrow_forward_ios</mat-icon></button>
     </mat-card-actions>
-    <mat-card-footer>
-        <mat-progress-bar *ngIf="loading.organization" mode="indeterminate"></mat-progress-bar>
+    <mat-card-footer *ngIf="loading.organization">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </mat-card-footer>
 </mat-card>

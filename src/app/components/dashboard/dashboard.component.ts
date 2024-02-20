@@ -158,8 +158,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatSectors(sectors: string[]): string {
-    return sectors.map((id) => this.fireService.sectors.get(id)).join('\n');
+  formatSectors(sectorIds: string[], other: string): string {
+    return sectorIds.map((id) => {
+      const value = this.fireService.sectors.get(id);
+      if (value?.toLowerCase().includes('other')) return other;
+      return value;
+    }).join('\n');
   }
 
   onClickOrganization(id: string) {

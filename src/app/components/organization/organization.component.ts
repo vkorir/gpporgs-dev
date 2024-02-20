@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, combineLatest, map, takeUntil } from 'rxjs';
 import { Organization } from 'src/app/models/organization';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -13,6 +13,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   styleUrl: './organization.component.scss',
 })
 export class OrganizationComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
   private fb = inject(FormBuilder);
   private location = inject(Location);
   private snackBar = inject(MatSnackBar);
@@ -23,31 +24,32 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   formGroup = this.fb.group({});
   address = this.fb.group({});
   contacts = this.fb.group({});
-  contactIds: string[] = [];
-  isEditDisabled = true;
+  contactIds: string[];
+  isReadOnly = true;
 
+  id: string | null;
   loading = { organization: true, address: true, contacts: true };
 
   // For auto-unsubscribe
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.formGroup.disable();
-    this.fetchOrganzation(this.route.snapshot.paramMap.get('id'));
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.fetchOrganzation();
   }
 
   ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  fetchOrganzation(id: string | null) {
-    if (!id) {
+  fetchOrganzation() {
+    if (!this.id) {
       this.snackBar.open('Organization not found');
       return;
     }
     this.fireService
-      .getOrganization(id)
+      .getOrganization(this.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((_organization) => {
         if (_organization) {
@@ -76,6 +78,8 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   // Fetch contacts in parallel and update the contacts FormGroup
   private fetchContacts(ids: string[]) {
+    if (ids.length == 0) this.loading.contacts = false;
+    this.contactIds = [];
     const observables = ids.map((id) => {
       this.contactIds.push(id);
       return this.fireService.getContact(id);
@@ -108,5 +112,13 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   goBack() {
     this.location.back();
+  }
+
+  actionEdit() {
+    this.snackBar.open('editing is not enabled');
+  }
+
+  actionReviews() {
+    this.router.navigate(['organization', this.id, 'reviews']);
   }
 }

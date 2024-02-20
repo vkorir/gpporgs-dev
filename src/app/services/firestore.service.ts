@@ -5,11 +5,10 @@ import {
   collectionData,
   doc,
   docData,
-  limit,
   orderBy,
   query,
   updateDoc,
-  where
+  where,
 } from '@angular/fire/firestore';
 import {
   BehaviorSubject,
@@ -27,6 +26,7 @@ export class FirestoreService implements OnDestroy {
   private readonly organizations = 'organizations';
   private readonly addresses = 'addresses';
   private readonly contacts = 'contacts';
+  private readonly reviews = 'reviews';
 
   readonly affiliations = new Map<string, string>();
   readonly countries = new Map<string, string>();
@@ -75,8 +75,8 @@ export class FirestoreService implements OnDestroy {
   getOrganizations(approved: boolean): Observable<any[]> {
     const order = orderBy('name', 'asc');
     const condition = where('approved', '==', approved);
-    const orgCollection = collection(this.firestore, this.organizations);
-    return collectionData(query(orgCollection, condition, order, limit(1)));
+    const col = collection(this.firestore, this.organizations);
+    return collectionData(query(col, condition, order));
   }
 
   updateOrganization(id: string, partial: any): void {
@@ -92,5 +92,12 @@ export class FirestoreService implements OnDestroy {
   getContact(id: string): Observable<any> {
     const docRef = doc(this.firestore, this.contacts, id);
     return docData(docRef, { idField: 'id' });
+  }
+
+  getReviews(organization: string | null): Observable<any[]> {
+    const order = orderBy('createdAt', 'desc');
+    const condition = where('organization', '==', organization);
+    const col = collection(this.firestore, this.reviews);
+    return collectionData(query(col, condition, order));
   }
 }

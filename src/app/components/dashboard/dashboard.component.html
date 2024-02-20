@@ -57,7 +57,7 @@
     </ng-container>
     <ng-container matColumnDef="sectors">
       <th mat-header-cell *matHeaderCellDef>Sectors</th>
-      <td mat-cell *matCellDef="let organization" [innerText]="formatSectors(organization.sectors)"></td>
+      <td mat-cell *matCellDef="let organization" [innerText]="formatSectors(organization.sectors, organization.otherSector)"></td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayCols; sticky: true"></tr>
     <tr mat-row *matRowDef="let organizaton; columns: displayCols" (click)="onClickOrganization(organizaton.id)"></tr>

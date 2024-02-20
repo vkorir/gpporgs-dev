@@ -1,0 +1,33 @@
+<button mat-button class="shadow-1 mb-2" (click)="goBack()">
+    <mat-icon>arrow_back_ios</mat-icon> Back
+</button>
+<mat-card>
+    <mat-card-header>
+        <h3>Organization Reviews</h3>
+    </mat-card-header>
+    <mat-card-content *ngIf="!isLoading">
+        <div class="h-full">
+            <mat-accordion>
+                @for (review of reviews; track review; let idx = $index) {
+                <mat-expansion-panel class="w-full">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Review #{{idx + 1}}
+                            <i class="ml-2">posted {{getDate(review.createdAt)}}</i>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            open to see review details
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <app-review [data]="review"></app-review>
+                </mat-expansion-panel>
+                } @empty {
+                <p>No review yet.</p>
+                }
+            </mat-accordion>
+        </div>
+    </mat-card-content>
+    <mat-card-footer *ngIf="isLoading">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </mat-card-footer>
+</mat-card>
