@@ -5,9 +5,9 @@
     <mat-card-header>
         <h3>Organization Details</h3>
     </mat-card-header>
-    <mat-card-content *ngIf="!loading.organization && !loading.address">
+    <mat-card-content *ngIf="!loading.organization && !loading.address" class="overflow-y-auto">
         <form [formGroup]="formGroup" class="flex justify-content-between">
-            <div class="flex flex-column md:flex-row overflow-y-auto h-full">
+            <div class="flex flex-column md:flex-row">
                 <div class="mr-1">
                     <mat-form-field class="w-full">
                         <mat-label>Name</mat-label>

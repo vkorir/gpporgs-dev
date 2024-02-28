@@ -6,14 +6,14 @@
         <h3>Organization Reviews</h3>
     </mat-card-header>
     <mat-card-content *ngIf="!isLoading">
-        <div class="h-full">
+        <div class="h-full overflow-y-auto">
             <mat-accordion>
-                @for (review of reviews; track review; let idx = $index) {
-                <mat-expansion-panel class="w-full">
+                @for (review of reviews; track review.id; let idx = $index) {
+                <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             Review #{{idx + 1}}
-                            <i class="ml-2">posted {{getDate(review.createdAt)}}</i>
+                            <i class="ml-4">posted {{getDate(review.createdAt)}}</i>
                         </mat-panel-title>
                         <mat-panel-description>
                             open to see review details

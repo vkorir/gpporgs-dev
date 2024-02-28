@@ -39,7 +39,7 @@ export class ReviewComponent implements OnInit {
 
   initControls() {
     for (const key of Object.keys(new Review())) {
-      this.formGroup.addControl(key, this.fb.control(this.data[key]));
+      this.formGroup.addControl(key, this.fb.control(this.data[key] || '-'));
     }
   }
 
@@ -52,7 +52,7 @@ export class ReviewComponent implements OnInit {
         this.data['address'] = result;
         const controls: any = {};
         for (const key of Object.keys(new Address())) {
-          controls[key] = result[key];
+          controls[key] = result[key] || '-';
         }
         this.formGroup.addControl('address', this.fb.group(controls));
         this.isLoading = false;
@@ -60,7 +60,7 @@ export class ReviewComponent implements OnInit {
   }
 
   getCountry(): string {
-    return this.fireService.countries.get(this.data.address.country) || '';
+    return this.fireService.countries.get(this.data.address.country) || '-';
   }
 
   getRegion(): string {
@@ -68,7 +68,7 @@ export class ReviewComponent implements OnInit {
     if (value?.toLowerCase().includes('other') && this.data.otherRegion) {
       value = this.data.otherRegion;
     }
-    return value || '';
+    return value || '-';
   }
 
   getLanguages(): string[] {
@@ -86,7 +86,7 @@ export class ReviewComponent implements OnInit {
     if (value?.toLowerCase().includes('other') && this.data.otherType) {
       value = this.data.otherType;
     }
-    return value || '';
+    return value || '-';
   }
 
   getSectors(): string {

@@ -1,8 +1,7 @@
 <div *ngIf="fireService.dataLoaded$ | async" class="flex justify-content-between align-items-center">
   <mat-form-field appearance="fill" class="col-6 p-0">
     <mat-icon matTextPrefix class="vertical-align-middle">search</mat-icon>
-    <input matInput [formControl]="nameControl" placeholder="Search organization"
-      autocomplete="off">
+    <input matInput [formControl]="nameControl" placeholder="Search organization" autocomplete="off">
     <button *ngIf="nameControl.value" matSuffix mat-icon-button (click)="nameControl.reset('')">
       <mat-icon>close</mat-icon>
     </button>
@@ -57,7 +56,8 @@
     </ng-container>
     <ng-container matColumnDef="sectors">
       <th mat-header-cell *matHeaderCellDef>Sectors</th>
-      <td mat-cell *matCellDef="let organization" [innerText]="formatSectors(organization.sectors, organization.otherSector)"></td>
+      <td mat-cell *matCellDef="let organization"
+        [innerText]="formatSectors(organization.sectors, organization.otherSector)"></td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayCols; sticky: true"></tr>
     <tr mat-row *matRowDef="let organizaton; columns: displayCols" (click)="onClickOrganization(organizaton.id)"></tr>
@@ -67,4 +67,5 @@
     <mat-progress-bar mode="indeterminate" class=" justify-content-center align-items-end"></mat-progress-bar>
   </div>
 </div>
-<mat-paginator class="shadow-2" [pageSizeOptions]="[10, 25, 50]" [pageSize]="25" [disabled]="isDataLoading" showFirstLastButtons></mat-paginator>
+<mat-paginator class="shadow-2" [pageSizeOptions]="[10, 25, 50]" [pageSize]="25" [disabled]="isDataLoading"
+  showFirstLastButtons></mat-paginator>

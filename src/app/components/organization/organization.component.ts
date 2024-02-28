@@ -69,7 +69,7 @@ export class OrganizationComponent implements OnInit, OnDestroy {
       .subscribe((_address) => {
         const controls: any = {};
         for (const [key, value] of Object.entries(_address as any)) {
-          controls[key] = this.fb.control(value);
+          controls[key] = this.fb.control(value || '-');
         }
         this.formGroup.addControl('address', this.fb.group(controls));
         this.loading.address = false;
@@ -92,7 +92,7 @@ export class OrganizationComponent implements OnInit, OnDestroy {
             const fg = this.fb.group({});
             for (const [key, val] of Object.entries(contact)) {
               // Skip the id field
-              if (key != 'id') fg.addControl(key, this.fb.control(val));
+              if (key != 'id') fg.addControl(key, this.fb.control(val || '-'));
             }
             this.contacts.addControl(contact['id'], fg);
           }
@@ -105,7 +105,7 @@ export class OrganizationComponent implements OnInit, OnDestroy {
     for (const [key, value] of Object.entries(new Organization())) {
       if (typeof value == 'string') {
         const val = (this.organization as any)[key];
-        this.formGroup.addControl(key, this.fb.control(val));
+        this.formGroup.addControl(key, this.fb.control(val || '-'));
       }
     }
   }
